@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import {connect} from 'react-redux';
-import {increment, decrement} from './ducks/counter.js';
+import {increment, decrement, undo, redo} from './ducks/counter.js';
 
 class App extends Component {
   render() {
@@ -37,15 +37,15 @@ class App extends Component {
             <br />
             <button
               className="counter__button undo"
-              disabled={ true }
-              onClick={ () => null }
+              disabled={ false }
+              onClick={ () => this.props.undo() }
             >
               Undo
             </button>
             <button
               className="counter__button redo"
-              disabled={ true }
-              onClick={ () => null }
+              disabled={ false }
+              onClick={ () => this.props.redo() }
             >
               Redo
             </button>
@@ -66,10 +66,12 @@ class App extends Component {
 //The "cherrypicker function" where you choose what you want from the store to use and to keep updated
 function mapStateToProps(state){
 return {
-    currentValue: state.currentValue
+    currentValue: state.currentValue,
+    futureValues: state.futureValues,
+    previousValues: state.previousValues
   }
 }
 
 //invokes the answer of the first invoke. The first param is what you want to get from the store. The second is obviously app.js
 //this will put the increment action function on props so if you want to invoke it you need to do this.props.increment()
-export default connect(mapStateToProps, {increment, decrement})(App);
+export default connect(mapStateToProps, {increment, decrement, undo, redo})(App);
